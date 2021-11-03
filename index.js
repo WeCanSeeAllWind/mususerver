@@ -1,19 +1,27 @@
 const express = require('express');
 const cors = require('cors');
 const { createServer } = require("http");
-const { Server } = require("socket.io");
-
 const app = express();
-const httpServer = createServer(app);
-const port = process.env.PORT || 3001;
-
 app.use(cors());
 
+const port = process.env.PORT || 3001;
+const clientDomain = process.env.CLIENT_ORIGIN || 'http://localhost:3001';
 
-const io = new Server(httpServer);
+const httpServer = createServer(app);
+const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: clientDomain,
+    methods: ["GET", "POST"]
+  }
+});
+
+
 
 io.on("connection", (socket) => {
   console.log(socket);
+  socket.on('welcome', (done)=>{
+    done('musu is forever');
+  })
 
 });
 
