@@ -20,9 +20,12 @@ const io = require("socket.io")(httpServer, {
 io.on("connection", (socket) => {
   const roomName = 'eliceClone';
   console.log(socket);
-  socket.on('GoodMorning', (nick, peerId, streamId)=>{
+  socket.on('hello', (data)=>{
+    socket.to(roomName).emit('hello', data);
+  })
+  socket.on('GoodMorning', (nick, peerId)=>{
     socket.join(roomName);
-    socket.to(roomName).emit('GoodMorning', nick, peerId, streamId);
+    socket.to(roomName).emit('GoodMorning', nick, peerId);
   });
   
 });
