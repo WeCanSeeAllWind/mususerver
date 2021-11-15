@@ -16,17 +16,17 @@ const io = require("socket.io")(httpServer, {
 });
 
 
-
 io.on("connection", (socket) => {
   const roomName = 'eliceClone';
-  console.log(socket);
-  socket.on('hello', (data)=>{
-    socket.to(roomName).emit('hello', data);
+  socket.join(roomName);
+
+  socket.on('ImHere', (nick, peerId)=>{
+    console.log(`I got ImHere form ${nick}`);
+    socket.to(roomName).emit('ImHere', nick, peerId, socket.id);
   })
-  socket.on('GoodMorning', (nick, peerId)=>{
-    socket.join(roomName);
-    socket.to(roomName).emit('GoodMorning', nick, peerId);
-  });
+  socket.on('myName', (nick, socketId)=>{
+    socket.to(socketId).emit('otherName', nick);
+  })
   
 });
 
